@@ -114,4 +114,57 @@ A tela do tipo SELECAO exibe uma lista de opções para que o usuário.
 
 O aplicativo envia uma requisição POST para a url informada e com o body definido pelo objeto dentro de cada item da lista de seleção, quando o mesmo é acionado, semelhando ao funcionamento dos botões da tela FORMULARIO.
 
+# Sistema de Votação para Cooperativas
+
+Este projeto foi criado para resolver o desafio de gerenciar votações em assembleias de forma simples e eficiente. O foco foi entregar um código organizado, fácil de ler e que resolve todos os requisitos pedidos sem complicar o que é simples.
+
+## Como o projeto foi pensado
+
+Ao desenvolver a solução, foquei em alguns pontos que considero essenciais para um bom software:
+
+- **Simplicidade**: O código faz exatamente o que precisa fazer. Evitei usar ferramentas ou padrões muito complexos que só dificultariam o entendimento.
+- **Organização**: Dividi o projeto em pastas claras (onde ficam as regras, onde ficam os dados, onde ficam os caminhos da API). Isso facilita muito se outra pessoa precisar mexer no código depois.
+- **Cuidado com os Dados**: Configurei o banco de dados para salvar as informações em um arquivo. Assim, se você desligar e ligar o sistema, nada do que foi votado é perdido.
+- **Tratamento de Erros**: O sistema está preparado para avisar quando algo dá errado. Por exemplo, se alguém tentar votar duas vezes ou em uma votação que já fechou, o sistema retorna uma mensagem clara explicando o motivo.
+
+## O que o sistema faz
+
+- **Criação de Pautas**: Você pode cadastrar o assunto que será votado.
+- **Abertura de Votação**: Você escolhe por quanto tempo a votação ficará aberta (se não escolher, o padrão é 1 minuto).
+- **Votação Real**: O sistema recebe os votos ("Sim" ou "Não") e verifica se o associado pode votar através de uma consulta simulada.
+- **Resultado**: O sistema conta os votos e diz quem ganhou ou se houve empate.
+
+## Como Rodar
+
+1.  Certifique-se de ter o **JDK 17** e o **Maven** instalados.
+2.  Build do projeto:
+    ```bash
+    mvn clean install
+    ```
+3.  Execução:
+    ```bash
+    mvn spring-boot:run
+    ```
+4.  Acesse o Swagger em: `http://localhost:8080/swagger-ui.html` para testar os endpoints de forma interativa.
+
+## Endpoints Principais
+
+A API está dividida logicamente:
+
+| Recurso | Método | Endpoint | Descrição |
+| :--- | :--- | :--- | :--- |
+| **Pauta** | POST | `/v1/pautas` | Cria uma nova pauta. |
+| **Sessão** | POST | `/v1/pautas/{id}/sessao` | Abre a votação (default 1min). |
+| **Voto** | POST | `/v1/pautas/{id}/votos` | Registra voto com validação de CPF. |
+| **Resultado** | GET | `/v1/pautas/{id}/resultado` | Consolida a votação. |
+
+
+## Qualidade e Testes
+
+Criei testes automáticos para garantir que as regras principais não quebrem. Por exemplo, existem testes que garantem que ninguém vote depois do tempo ou que um associado não vote mais de uma vez.
+
+---
+
+
+
 # desafio-votacao
