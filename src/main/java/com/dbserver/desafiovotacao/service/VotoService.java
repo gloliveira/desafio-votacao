@@ -50,8 +50,6 @@ public class VotoService {
     }
 
     public Map<Voto.OpcaoVoto, Long> contabilizarVotos(Long pautaId) {
-        // Usando projeção ou query customizada para evitar carregar milhares de objetos na memória
-        // Para este desafio, manteremos a lógica mas comentaremos sobre a otimização no README
         List<Voto> votos = votoRepository.findAllByPautaId(pautaId);
         return votos.stream()
                 .collect(Collectors.groupingBy(Voto::getVoto, Collectors.counting()));
