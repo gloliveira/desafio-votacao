@@ -38,9 +38,17 @@ public class PautaController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar todas as pautas")
-    public ResponseEntity<List<Pauta>> listar() {
-        return ResponseEntity.ok(pautaService.listarTodas());
+    @Operation(summary = "Listar pautas com paginação")
+    public ResponseEntity<org.springframework.data.domain.Page<Pauta>> listar(
+            @org.springframework.data.web.PageableDefault(size = 10) org.springframework.data.domain.Pageable pageable) {
+        return ResponseEntity.ok(pautaService.listarTodas(pageable));
+    }
+
+    @PostMapping("/{id}/sessao/fechar")
+    @Operation(summary = "Fechar uma sessão de votação manualmente")
+    public ResponseEntity<String> fecharSessao(@PathVariable Long id) {
+        sessaoService.fecharSessaoManualmente(id);
+        return ResponseEntity.ok("Sessão fechada manualmente com sucesso");
     }
 
     @PostMapping("/{id}/sessao")

@@ -26,4 +26,8 @@ public class PautaService {
     public List<Pauta> listarTodas() {
         return pautaRepository.findAll();
     }
+
+    public org.springframework.data.domain.Page<Pauta> listarTodas(org.springframework.data.domain.Pageable pageable) {
+        return pautaRepository.findAll(pageable);
+    }
 }

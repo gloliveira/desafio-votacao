@@ -39,4 +39,14 @@ public class SessaoService {
         return sessaoVotacaoRepository.findByPautaId(pautaId)
                 .orElseThrow(() -> new BusinessException("Sessão não encontrada para a pauta informada"));
     }
+
+    @Transactional
+    public void fecharSessaoManualmente(Long pautaId) {
+        SessaoVotacao sessao = buscarPorPauta(pautaId);
+        if (!sessao.estaAberta()) {
+            throw new BusinessException("A sessão já está fechada");
+        }
+        sessao.setDataEncerramento(LocalDateTime.now());
+        sessaoVotacaoRepository.save(sessao);
+    }
 }

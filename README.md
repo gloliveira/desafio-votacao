@@ -6,10 +6,8 @@ No cooperativismo, cada associado possui um voto e as decisões são tomadas em 
 Essa solução deve ser executada na nuvem e promover as seguintes funcionalidades através de uma API REST:
 
 - Cadastrar uma nova pauta
-- Abrir uma sessão de votação em uma pauta (a sessão de votação deve ficar aberta por
-  um tempo determinado na chamada de abertura ou 1 minuto por default)
-- Receber votos dos associados em pautas (os votos são apenas 'Sim'/'Não'. Cada associado
-  é identificado por um id único e pode votar apenas uma vez por pauta)
+- Abrir uma sessão de votação em uma pauta (a sessão de votação deve ficar aberta por um tempo determinado na chamada de abertura ou 1 minuto por default)
+- Receber votos dos associados em pautas (os votos são apenas 'Sim'/'Não'. Cada associado é identificado por um id único e pode votar apenas uma vez por pauta)
 - Contabilizar os votos e dar o resultado da votação na pauta
 
 Para fins de exercício, a segurança das interfaces pode ser abstraída e qualquer chamada para as interfaces pode ser considerada como autorizada. A solução deve ser construída em java, usando Spring-boot, mas os frameworks e bibliotecas são de livre escolha (desde que não infrinja direitos de uso).
@@ -31,14 +29,14 @@ Lembre de deixar todas as orientações necessárias para executar o seu código
   - Caso o CPF seja inválido, a API retornará o HTTP Status 404 (Not found). Você pode usar geradores de CPF para gerar CPFs válidos
   - Caso o CPF seja válido, a API retornará se o usuário pode (ABLE_TO_VOTE) ou não pode (UNABLE_TO_VOTE) executar a operação. Essa operação retorna resultados aleatórios, portanto um mesmo CPF pode funcionar em um teste e não funcionar no outro.
 
-```
+```json
 // CPF Ok para votar
 {
-    "status": "ABLE_TO_VOTE
+    "status": "ABLE_TO_VOTE"
 }
 // CPF Nao Ok para votar - retornar 404 no client tb
 {
-    "status": "UNABLE_TO_VOTE
+    "status": "UNABLE_TO_VOTE"
 }
 ```
 
@@ -46,11 +44,8 @@ Exemplos de retorno do serviço
 
 ### Tarefa Bônus 2 - Performance
 
-- Imagine que sua aplicação possa ser usada em cenários que existam centenas de
-  milhares de votos. Ela deve se comportar de maneira performática nesses
-  cenários
-- Testes de performance são uma boa maneira de garantir e observar como sua
-  aplicação se comporta
+- Imagine que sua aplicação possa ser usada em cenários que existam centenas de milhares de votos. Ela deve se comportar de maneira performática nesses cenários
+- Testes de performance são uma boa maneira de garantir e observar como sua aplicação se comporta
 
 ### Tarefa Bônus 3 - Versionamento da API
 
@@ -74,12 +69,10 @@ Exemplos de retorno do serviço
 ## Dicas
 
 - Teste bem sua solução, evite bugs
-- Deixe o domínio das URLs de callback passiveis de alteração via configuração, para facilitar
-  o teste tanto no emulador, quanto em dispositivos fisicos.
+- Deixe o domínio das URLs de callback passiveis de alteração via configuração, para facilitar o teste tanto no emulador, quanto em dispositivos fisicos.
   Observações importantes
 - Não inicie o teste sem sanar todas as dúvidas
-- Iremos executar a aplicação para testá-la, cuide com qualquer dependência externa e
-  deixe claro caso haja instruções especiais para execução do mesmo
+- Iremos executar a aplicação para testá-la, cuide com qualquer dependência externa e deixe claro caso haja instruções especiais para execução do mesmo
   Classificação da informação: Uso Interno
 
 ## Anexo 1
@@ -92,17 +85,16 @@ A seguir serão detalhados os tipos de tela que o cliente mobile suporta, assim 
 
 A tela do tipo FORMULARIO exibe uma coleção de campos (itens) e possui um ou dois botões de ação na parte inferior.
 
-O aplicativo envia uma requisição POST para a url informada e com o body definido pelo objeto dentro de cada botão quando o mesmo é acionado. Nos casos onde temos campos de entrada
-de dados na tela, os valores informados pelo usuário são adicionados ao corpo da requisição. Abaixo o exemplo da requisição que o aplicativo vai fazer quando o botão “Ação 1” for acionado:
+O aplicativo envia uma requisição POST para a url informada e com o body definido pelo objeto dentro de cada botão quando o mesmo é acionado. Nos casos onde temos campos de entrada de dados na tela, os valores informados pelo usuário são adicionados ao corpo da requisição. Abaixo o exemplo da requisição que o aplicativo vai fazer quando o botão “Ação 1” for acionado:
 
-```
+```json
 POST http://seudominio.com/ACAO1
 {
-    “campo1”: “valor1”,
-    “campo2”: 123,
-    “idCampoTexto”: “Texto”,
-    “idCampoNumerico: 999
-    “idCampoData”: “01/01/2000”
+    "campo1": "valor1",
+    "campo2": 123,
+    "idCampoTexto": "Texto",
+    "idCampoNumerico": 999,
+    "idCampoData": "01/01/2000"
 }
 ```
 
@@ -113,6 +105,8 @@ Obs: o formato da url acima é meramente ilustrativo e não define qualquer padr
 A tela do tipo SELECAO exibe uma lista de opções para que o usuário.
 
 O aplicativo envia uma requisição POST para a url informada e com o body definido pelo objeto dentro de cada item da lista de seleção, quando o mesmo é acionado, semelhando ao funcionamento dos botões da tela FORMULARIO.
+
+---
 
 # Sistema de Votação para Cooperativas
 
@@ -127,13 +121,6 @@ Ao desenvolver a solução, foquei em alguns pontos que considero essenciais par
 - **Cuidado com os Dados**: Configurei o banco de dados para salvar as informações em um arquivo. Assim, se você desligar e ligar o sistema, nada do que foi votado é perdido.
 - **Tratamento de Erros**: O sistema está preparado para avisar quando algo dá errado. Por exemplo, se alguém tentar votar duas vezes ou em uma votação que já fechou, o sistema retorna uma mensagem clara explicando o motivo.
 
-## O que o sistema faz
-
-- **Criação de Pautas**: Você pode cadastrar o assunto que será votado.
-- **Abertura de Votação**: Você escolhe por quanto tempo a votação ficará aberta (se não escolher, o padrão é 1 minuto).
-- **Votação Real**: O sistema recebe os votos ("Sim" ou "Não") e verifica se o associado pode votar através de uma consulta simulada.
-- **Resultado**: O sistema conta os votos e diz quem ganhou ou se houve empate.
-
 ## Como Rodar
 
 1.  Certifique-se de ter o **JDK 17** e o **Maven** instalados.
@@ -147,24 +134,62 @@ Ao desenvolver a solução, foquei em alguns pontos que considero essenciais par
     ```
 4.  Acesse o Swagger em: `http://localhost:8080/swagger-ui.html` para testar os endpoints de forma interativa.
 
-## Endpoints Principais
+## Guia de Testes (CURL)
 
-A API está dividida logicamente:
+Você pode importar esses comandos diretamente no Postman (**Import > Raw text**).
 
-| Recurso | Método | Endpoint | Descrição |
-| :--- | :--- | :--- | :--- |
-| **Pauta** | POST | `/v1/pautas` | Cria uma nova pauta. |
-| **Sessão** | POST | `/v1/pautas/{id}/sessao` | Abre a votação (default 1min). |
-| **Voto** | POST | `/v1/pautas/{id}/votos` | Registra voto com validação de CPF. |
-| **Resultado** | GET | `/v1/pautas/{id}/resultado` | Consolida a votação. |
+### 1. Cadastrar uma nova Pauta
+```bash
+curl -X POST "http://localhost:8080/v1/pautas" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "titulo": "Aumento do Capital Social",
+           "descricao": "Votação para decidir sobre o aumento do capital social da cooperativa em 2026."
+         }'
+```
 
+### 2. Listar todas as Pautas (Com Paginação)
+```bash
+curl -X GET "http://localhost:8080/v1/pautas?page=0&size=10"
+```
+
+### 3. Abrir Sessão de Votação
+```bash
+curl -X POST "http://localhost:8080/v1/pautas/1/sessao" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "minutos": 5
+         }'
+```
+
+### 4. Registrar Voto (SIM)
+```bash
+curl -X POST "http://localhost:8080/v1/pautas/1/votos" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "associadoId": "12345678901",
+           "voto": "SIM"
+         }'
+```
+
+### 5. Consultar Resultado
+```bash
+curl -X GET "http://localhost:8080/v1/pautas/1/resultado"
+```
+
+### 6. Fechar Sessão Manualmente (Opcional)
+```bash
+curl -X POST "http://localhost:8080/v1/pautas/1/sessao/fechar"
+```
+
+### 7. Healthcheck (Monitoramento)
+```bash
+curl -X GET "http://localhost:8080/actuator/health"
+```
 
 ## Qualidade e Testes
 
 Criei testes automáticos para garantir que as regras principais não quebrem. Por exemplo, existem testes que garantem que ninguém vote depois do tempo ou que um associado não vote mais de uma vez.
 
 ---
-
-
-
-# desafio-votacao
+**desafio-votacao**
